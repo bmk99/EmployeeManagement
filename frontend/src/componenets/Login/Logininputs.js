@@ -1,4 +1,4 @@
-import "./Logininputs.css";
+import "./style.css";
 
 import { useField, ErrorMessage } from "formik";
 
