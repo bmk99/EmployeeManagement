@@ -3,17 +3,24 @@ const EmployeeSchema = require("../models/Employees");
 exports.createEmp = async (req, res) => {
   const data = req.body;
   const image = req.file ? req.file.filename : data.image;
-
+  const createdBy = req.userid
+console.log(req.userid)
   try {
     const empUser = new EmployeeSchema({
       ...data,
       image,
-      createby: req.userid,
+      createdBy,
     });
     await empUser.save();
     res.status(201).json({ message: "Employee created successfully" });
   } catch (error) {
     console.log(error);
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyValue)[0];
+      const duplicateValue = error.keyValue[field];
+      const message = `The ${field} '${duplicateValue}' is already registered. Please use a different ${field}.`;
+      return res.status(400).json({ message });
+    }
     res.status(500).json({ message: error.message });
   }
 };
@@ -44,14 +51,17 @@ exports.editEmp = async (req, res) => {
       }
     );
     await updatedUser.save();
-    console.log(updatedUser);
     return res.status(201).json(updatedUser);
   } catch (error) {
     console.log(error);
-    if ((error.name = "ValidationError")) {
-      return res.status(404).json({ message: "enum path not in " });
+    
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyValue)[0];
+      const duplicateValue = error.keyValue[field];
+      const message = `The ${field} '${duplicateValue}' is already registered. Please use a different ${field}.`;
+      return res.status(400).json({ message });
     }
-    return res.status(404).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 

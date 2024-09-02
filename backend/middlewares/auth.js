@@ -12,6 +12,7 @@ const authorization = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
     req.username = decoded.username;
     req.userid = decoded.id;
+    
     next();
   } catch (error) {
     return res.status(403).json({ message: error.message });

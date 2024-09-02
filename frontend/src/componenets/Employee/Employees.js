@@ -14,9 +14,11 @@ const Created = ({ value }) => {
   return <span>{formattedDate}</span>;
 };
 
-function Employees({ details }) {
+function Employees({ details ,data,setData}) {
   const navigate = useNavigate();
   const [render, setRender] = useState(false);
+  // const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const columns = useMemo(
     () => [
@@ -47,6 +49,7 @@ function Employees({ details }) {
         header: () => "Email",
       },
       {
+  
         accessorKey: "designation",
         cell: (info) => info.getValue(),
         header: () => "Designation",
@@ -87,7 +90,7 @@ function Employees({ details }) {
           <div className="div">
             <button onClick={() => handleEditClick(row.original)}>Edit</button>{" "}
             <span>/</span>
-            <button onClick={() => handleDelete(row.original._id)}>
+            <button onClick={() => handleDelete(row.original)}>
               Delete
             </button>
           </div>
@@ -96,55 +99,57 @@ function Employees({ details }) {
     ],
     []
   );
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+
   const handleEditClick = (data) => {
     navigate(`/editform/${data._id}`, { state: data });
   };
+  // useEffect(() => {
+  //   const fetchEmployees = async () => {
+  //     try {
+  //       const result = await axios.get("http://localhost:8000/emp/allEmp", {
+  //         headers: {
+  //           Authorization: `Bearer ${details.token}`,
+  //         },
+  //       });
+  //       setData(result.data);
+  //     } catch (err) {
+  //       setError("Failed to fetch employees.");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this employee?")) {
+  //   fetchEmployees();
+  // }, [details.token,render,data]);
+
+
+  const handleDelete = async (row) => {
       try {
         // setLoading(true)
-        await axios.delete(`http://localhost:8000/emp/deleteEmp/${id}`, {
+       const res =  await axios.delete(`http://localhost:8000/emp/deleteEmp/${row._id}`, {
           headers: {
             Authorization: `Bearer ${details.token}`,
           },
         });
+        console.log(res)
+        // console.log(data)
         // Remove the deleted employee from the state
-        const filterdata = data.filter((employee) => employee._id !== id);
-        setData(filterdata);
+        // const filterdata = data.filter((employee) => employee._id !== row._id);
+        console.log({data})
+        // console.log({filterdata})
+
+        // setData(filterdata );
+        alert("Employee deleted successfully"); 
         setRender(!render);
-        alert("Employee deleted successfully");
         // setLoading(false)
       } catch (error) {
         console.error(error);
         alert("Failed to delete employee");
       }
-    }
   };
+ console.log({data})
 
-  useEffect(() => {
-    const fetchEmployees = async () => {
-      try {
-        const result = await axios.get("http://localhost:8000/emp/allEmp", {
-          headers: {
-            Authorization: `Bearer ${details.token}`,
-          },
-        });
-        setData(result.data);
-      } catch (err) {
-        setError("Failed to fetch employees.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchEmployees();
-  }, [details.token, render]);
-
-  if (loading) return <div>Loading...</div>;
+  // if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
   // if (data.length === 0) return <div>No employees found.</div>;
 
@@ -160,14 +165,15 @@ function Employees({ details }) {
       
         {/* <h2>{details.username}</h2> */}
       </div>
-      {
+      <Table columns={columns} data={data} />
+      {/* {
      
-      data.length > 0 ?   <Table columns={columns} data={data} /> : (
+        data.length > 0 ?   <Table columns={columns} data={data} /> : (
         <div className="nodata">
 
           <h2>NO DATA FOUND</h2>
         </div>)
-      }
+      } */}
 
     </div>
     <>

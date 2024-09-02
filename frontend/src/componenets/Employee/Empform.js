@@ -69,7 +69,7 @@ const Empform = () => {
       });
 
       if (employee) {
-        await axios.put(
+        const {data} = await axios.put(
           `http://localhost:8000/emp/updateEmp/${employee._id}`,
           formData,
           {
@@ -81,7 +81,7 @@ const Empform = () => {
         );
         alert("Employee updated successfully");
       } else {
-        await axios.post("http://localhost:8000/emp/createEmp", formData, {
+       const {data} =  await axios.post("http://localhost:8000/emp/createEmp", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${details.token}`,
@@ -95,7 +95,7 @@ const Empform = () => {
       navigate("/employee")
     } catch (error) {
       console.error(error);
-      alert("Failed to submit employee data");
+      alert(error.response.data.message);
     }
   };
 

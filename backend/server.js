@@ -26,9 +26,9 @@ mongoose
   });
 
 mongoose.connection.on("error", (err) => console.error(err));
-mongoose.connection.on("disconnected", () =>
-  console.log("Mongo DB disconnected")
-);
+// mongoose.connection.on("disconnected", () =>
+//   console.log("Mongo DB disconnected")
+// );
 // Setup multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
