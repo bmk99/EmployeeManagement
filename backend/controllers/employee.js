@@ -4,7 +4,10 @@ exports.createEmp = async (req, res) => {
   const data = req.body;
   const image = req.file ? req.file.filename : data.image;
   const createdBy = req.userid
-console.log(req.userid)
+  console.log(req.userid)
+
+
+    
   try {
     const empUser = new EmployeeSchema({
       ...data,
@@ -15,7 +18,7 @@ console.log(req.userid)
     res.status(201).json({ message: "Employee created successfully" });
   } catch (error) {
     console.log(error);
-    if (error.code === 11000) {
+    if (error.name == 'MongoServerError' && error.code === 11000) {
       const field = Object.keys(error.keyValue)[0];
       const duplicateValue = error.keyValue[field];
       const message = `The ${field} '${duplicateValue}' is already registered. Please use a different ${field}.`;

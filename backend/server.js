@@ -11,7 +11,7 @@ const multer = require("multer");
 app.use(express.json());
 app.use(
   cors({
-    "Access-Control-Allow-Origin": "http://localhost:3000",
+    "Access-Control-Allow-Origin": "http://localhost:3001",
   })
 );
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));

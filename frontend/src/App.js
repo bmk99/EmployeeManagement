@@ -1,6 +1,6 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import { useContext, useState,useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import Login from "./componenets/Login/Login";
 import { AuthContext } from "./componenets/context/UserContext";
 import {
@@ -15,7 +15,7 @@ import axios from "axios";
 function App() {
   const { details } = useContext(AuthContext);
   console.log(details);
-  const [data,setData] = useState([])
+  const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -28,11 +28,11 @@ function App() {
         setData(result.data);
       } catch (err) {
         setError("Failed to fetch employees.");
-      } 
+      }
     };
 
     fetchEmployees();
-  }, [details?.token,data]);
+  }, [details?.token, data]);
 
   return (
     <>
@@ -42,7 +42,12 @@ function App() {
           <Route path="/login" element={<Login />} />
         </Route>
         <Route element={<PrivateRoutes />}>
-          <Route path="/employee" element={<Employees details={details} data={data} setData={setData} />} />
+          <Route
+            path="/employee"
+            element={
+              <Employees details={details} data={data} setData={setData} />
+            }
+          />
           <Route path="/empform" element={<Empform details={details} />} />
           <Route path="/editform/:id" element={<Empform details={details} />} />
         </Route>
